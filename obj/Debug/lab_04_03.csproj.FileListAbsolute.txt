@@ -1,0 +1,11 @@
+C:\Users\gskfn\source\repos\lab_04_03\bin\Debug\lab_04_03.exe.config
+C:\Users\gskfn\source\repos\lab_04_03\bin\Debug\lab_04_03.exe
+C:\Users\gskfn\source\repos\lab_04_03\bin\Debug\lab_04_03.pdb
+C:\Users\gskfn\source\repos\lab_04_03\obj\Debug\lab_04_03.csproj.AssemblyReference.cache
+C:\Users\gskfn\source\repos\lab_04_03\obj\Debug\lab_04_03.fMain.resources
+C:\Users\gskfn\source\repos\lab_04_03\obj\Debug\lab_04_03.Properties.Resources.resources
+C:\Users\gskfn\source\repos\lab_04_03\obj\Debug\lab_04_03.csproj.GenerateResource.cache
+C:\Users\gskfn\source\repos\lab_04_03\obj\Debug\lab_04_03.csproj.CoreCompileInputs.cache
+C:\Users\gskfn\source\repos\lab_04_03\obj\Debug\lab_04_03.exe
+C:\Users\gskfn\source\repos\lab_04_03\obj\Debug\lab_04_03.pdb
+C:\Users\gskfn\source\repos\lab_04_03\obj\Debug\Lab_04_03.ftablet.resources
