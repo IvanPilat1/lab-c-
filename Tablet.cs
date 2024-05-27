@@ -15,8 +15,12 @@ namespace lab_04_03
         public string Resolution { get; set; }
         public int RAM { get; set; }
         public int Storage { get; set; }
-        public int Price { get; set; }
+        public int Price
+        {
+            get; set;
+        }
         public string OperatingSystem { get; set; }
+        
         public bool HasCamera { get; set; }
 
         public string Kategoria()
