@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace lab_04_03
 {
-    public class Tablet
+    public abstract class Tablet
     {
         public string Brand { get; set; }
         public string Model { get; set; }
@@ -23,7 +23,7 @@ namespace lab_04_03
         
         public bool HasCamera { get; set; }
 
-        public string Kategoria()
+        public virtual string  Kategoria()
         {
             if (Price > 20000)
                 return "cheap";

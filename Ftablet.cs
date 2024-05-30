@@ -34,6 +34,14 @@ namespace lab_04_03
             TheTablet.Storage = int.Parse(tbStorage.Text.Trim());
             TheTablet.OperatingSystem = tbOP.Text.Trim();
             TheTablet.Price = int.Parse(tbprise.Text.Trim());
+            if (TheTablet is HighEndTablet highEndTablet)
+            {
+                highEndTablet.SupportsStylus = chkSupportsStylus.Checked;
+            }
+            else if (TheTablet is BudgetTablet budgetTablet)
+            {
+                budgetTablet.IsKidsFriendly = chkIsKidsFriendly.Checked;
+            }
             DialogResult = DialogResult.OK;
         }
 
@@ -52,6 +60,18 @@ namespace lab_04_03
             tbStorage.Text = TheTablet.Storage.ToString();
             tbOP.Text = TheTablet.OperatingSystem;
             tbprise.Text = TheTablet.Price.ToString();
+            if (TheTablet is HighEndTablet highEndTablet)
+            {
+                chkSupportsStylus.Checked = highEndTablet.SupportsStylus;
+                chkSupportsStylus.Visible = true;
+                chkIsKidsFriendly.Visible = false;
+            }
+            else if (TheTablet is BudgetTablet budgetTablet)
+            {
+                chkIsKidsFriendly.Checked = budgetTablet.IsKidsFriendly;
+                chkIsKidsFriendly.Visible = true;
+                chkSupportsStylus.Visible = false;
+            }
         }
     }
 }

@@ -18,9 +18,11 @@ namespace lab_04_03
 {
     public partial class fMain : Form
     {
-        public fMain()
+         public fMain()
         {
             InitializeComponent();
+            bindSrcTablet = new BindingSource();
+            gvTablet.DataSource = bindSrcTablet;
         }
         private void fMain_Resize(object sender, EventArgs e)
         {
@@ -78,13 +80,40 @@ namespace lab_04_03
             gvTablet.Columns.Add(column);
 
 
-            bindSrcTablet.Add(new Tablet("Apell", "Ipad Pro 1", 12.9, "Full HD", 32, 64, 1200, "iPadOS 16", true));
-            EventArgs args = new EventArgs(); OnResize(args);
+            column = new DataGridViewTextBoxColumn();
+            column.DataPropertyName = "SupportsStylus";
+            column.Name = "Підтримка стилуса";
+            gvTablet.Columns.Add(column);
+
+            column = new DataGridViewTextBoxColumn();
+            column.DataPropertyName = "IsKidsFriendly";
+            column.Name = "Дружній до дітей";
+            gvTablet.Columns.Add(column);
+
+            bindSrcTablet.Add(new BudgetTablet("Samsung", "Galaxy Tab A", 8.0, "1280x800", 2, 32, 150, "Android", false, true));
+            bindSrcTablet.Add(new HighEndTablet("Apell", "Ipad Pro 1", 12.9, "Full HD", 32, 64, 1200, "iPadOS 16", true, true));
+
+            gvTablet.DataSource = bindSrcTablet;
+            EventArgs args = new EventArgs();
+            OnResize(args);
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            Tablet tablet = new Tablet();
+            Tablet tablet;
+            DialogResult result = MessageBox.Show("Додати High-End планшет?", "Вибір типу планшета", MessageBoxButtons.YesNoCancel);
+            if (result == DialogResult.Yes)
+            {
+                tablet = new HighEndTablet();
+            }
+            else if (result == DialogResult.No)
+            {
+                tablet = new BudgetTablet();
+            }
+            else
+            {
+                return; // Cancel the operation if user selected Cancel
+            }   
 
             ftablet ft = new ftablet(tablet);
             if (ft.ShowDialog() == DialogResult.OK)
@@ -148,6 +177,14 @@ namespace lab_04_03
                           + tablet.RAM + "\t" + tablet.Storage + "\t" +
                           tablet.Price + "\t" + tablet.OperatingSystem + "\t" +
                           tablet.HasCamera + "\t\n");
+                        if (tablet is HighEndTablet highEndTablet)
+                        {
+                            sw.Write(highEndTablet.SupportsStylus + "\t\n");
+                        }
+                        else if (tablet is BudgetTablet budgetTablet)
+                        {
+                            sw.Write(budgetTablet.IsKidsFriendly + "\t\n");
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -180,6 +217,14 @@ namespace lab_04_03
                         bw.Write(tablet.OperatingSystem);
                         bw.Write(tablet.Price);
                         bw.Write(tablet.HasCamera);
+                        if (tablet is HighEndTablet highEndTablet)
+                        {
+                            bw.Write(highEndTablet.SupportsStylus);
+                        }
+                        else if (tablet is BudgetTablet budgetTablet)
+                        {
+                            bw.Write(budgetTablet.IsKidsFriendly);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -195,7 +240,7 @@ namespace lab_04_03
         {
            OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Текстові файли (*.txt)|*.txt|All files (*.*)|*.*";
-            openFileDialog.Title = "Прoчитати дані у тукстовому форматі";
+            openFileDialog.Title = "Прoчитати дані у текстовому форматі";
             openFileDialog.InitialDirectory = Application.StartupPath;
             StreamReader sr;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -207,17 +252,36 @@ namespace lab_04_03
                     while ((s = sr.ReadLine()) != null)
                     {
                         string[] split = s.Split('\t');
-                        Tablet tablet = new Tablet(
-                            split[0],
-                            split[1],
-                            double.Parse(split[2]),
-                            (split[3]),
-                            int.Parse(split[4]),
-                            int.Parse(split[5]),
-                            int.Parse(split[6]),
-                            split[7],
-                            bool.Parse(split[8]));
-                        bindSrcTablet.Add(tablet);
+                        if (bool.TryParse(split[9], out bool supportsStylus)) // HighEndTablet
+                        {
+                            HighEndTablet tablet = new HighEndTablet(
+                                split[0],
+                                split[1],
+                                double.Parse(split[2]),
+                                split[3],
+                                int.Parse(split[4]),
+                                int.Parse(split[5]),
+                                int.Parse(split[6]),
+                                split[7],
+                                bool.Parse(split[8]),
+                                supportsStylus);
+                            bindSrcTablet.Add(tablet);
+                        }
+                        else if (bool.TryParse(split[9], out bool isKidsFriendly)) // BudgetTablet
+                        {
+                            BudgetTablet tablet = new BudgetTablet(
+                                split[0],
+                                split[1],
+                                double.Parse(split[2]),
+                                split[3],
+                                int.Parse(split[4]),
+                                int.Parse(split[5]),
+                                int.Parse(split[6]),
+                                split[7],
+                                bool.Parse(split[8]),
+                                isKidsFriendly);
+                            bindSrcTablet.Add(tablet);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -233,7 +297,7 @@ namespace lab_04_03
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Файли даних (*.txt)|*.txt|All files (*.*)|*.*";
-            openFileDialog.Title = "Прoчитати дані у тукстовому форматі";
+            openFileDialog.Title = "Прoчитати дані у бiнарному форматі";
             openFileDialog.InitialDirectory = Application.StartupPath;
             BinaryReader br;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -242,45 +306,35 @@ namespace lab_04_03
                 string s;
                 try
                 {
-                    Tablet tablet; while(br.BaseStream.Position < br.BaseStream.Length)
+                    while(br.BaseStream.Position < br.BaseStream.Length)
                     {
-                        tablet = new Tablet();
-                        for(int i = 1; i <= 9; i++)
-                        {
-                            switch(i)
-                            {
-                                case 1:
-                                    tablet.Brand = br.ReadString();
-                                    break;
-                                case 2:
-                                    tablet.Model = br.ReadString();
-                                    break;
-                                case 3:
-                                    tablet.ScreenSize = br.ReadDouble();
-                                    break;
-                                case 4:
-                                    tablet.Resolution = br.ReadString();
-                                    break;
-                                case 5:
-                                    tablet.RAM = br.ReadInt32();
-                                    break;
-                                case 6:
-                                    tablet.Storage = br.ReadInt32();
-                                    break;
-                                case 7:
-                                    tablet.Price = br.ReadInt32();
-                                    break;
-                                case 8:
-                                    tablet.OperatingSystem = br.ReadString();
-                                    break;
-                                case 9:
-                                    tablet.HasCamera = br.ReadBoolean();
-                                    break;
+                        string brand = br.ReadString();
+                        string model = br.ReadString();
+                        double screenSize = br.ReadDouble();
+                        string resolution = br.ReadString();
+                        int ram = br.ReadInt32();
+                        int storage = br.ReadInt32();
+                        int price = br.ReadInt32();
+                        string operatingSystem = br.ReadString();
+                        bool hasCamera = br.ReadBoolean();
 
-                            }
+                        // Assume that the last boolean value determines the type
+                        bool lastBool = br.ReadBoolean();
+
+                        // Check if the boolean value should be used for HighEndTablet or BudgetTablet
+                        if (lastBool) // This condition may be customized based on your data format
+                        {
+                            bool supportsStylus = lastBool;
+                            bindSrcTablet.Add(new HighEndTablet(brand, model, screenSize, resolution, ram, storage, price, operatingSystem, hasCamera, supportsStylus));
                         }
-                        bindSrcTablet.Add(tablet);
-                    } 
+                        else
+                        {
+                            bool isKidsFriendly = lastBool;
+                            bindSrcTablet.Add(new BudgetTablet(brand, model, screenSize, resolution, ram, storage, price, operatingSystem, hasCamera, isKidsFriendly));
+                        }
+                    }
+                        
+                     
                 }
                 catch (Exception ex)
                 {

@@ -50,12 +50,16 @@
             this.chbHasCamera = new System.Windows.Forms.CheckBox();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.chkSupportsStylus = new System.Windows.Forms.CheckBox();
+            this.chkIsKidsFriendly = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.chkIsKidsFriendly);
+            this.groupBox1.Controls.Add(this.chkSupportsStylus);
             this.groupBox1.Controls.Add(this.tbprise);
             this.groupBox1.Controls.Add(this.tbOP);
             this.groupBox1.Controls.Add(this.tbStorage);
@@ -247,6 +251,26 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // chkSupportsStylus
+            // 
+            this.chkSupportsStylus.AutoSize = true;
+            this.chkSupportsStylus.Location = new System.Drawing.Point(7, 254);
+            this.chkSupportsStylus.Name = "chkSupportsStylus";
+            this.chkSupportsStylus.Size = new System.Drawing.Size(153, 20);
+            this.chkSupportsStylus.TabIndex = 16;
+            this.chkSupportsStylus.Text = "Підтримка стилуса";
+            this.chkSupportsStylus.UseVisualStyleBackColor = true;
+            // 
+            // chkIsKidsFriendly
+            // 
+            this.chkIsKidsFriendly.AutoSize = true;
+            this.chkIsKidsFriendly.Location = new System.Drawing.Point(174, 254);
+            this.chkIsKidsFriendly.Name = "chkIsKidsFriendly";
+            this.chkIsKidsFriendly.Size = new System.Drawing.Size(138, 20);
+            this.chkIsKidsFriendly.TabIndex = 17;
+            this.chkIsKidsFriendly.Text = "Дружній до дітей";
+            this.chkIsKidsFriendly.UseVisualStyleBackColor = true;
+            // 
             // ftablet
             // 
             this.AcceptButton = this.btnOk;
@@ -296,5 +320,7 @@
         private System.Windows.Forms.CheckBox chbHasCamera;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.CheckBox chkIsKidsFriendly;
+        private System.Windows.Forms.CheckBox chkSupportsStylus;
     }
 }
